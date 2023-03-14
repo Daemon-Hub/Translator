@@ -1,12 +1,12 @@
-from tkinter import *
-from tkinter import ttk
+from tkinter import Tk, Canvas, Frame, PhotoImage, Scrollbar, Label, Text, StringVar, Button, TOP, END
+from tkinter.ttk import Combobox
 from gtts import gTTS
 from playsound import playsound
 from speech_recognition import Recognizer, Microphone
+from googletrans import LANGUAGES, Translator
+from pyperclip import copy, paste
+from tkinter.messagebox import showinfo
 
-import googletrans
-import pyperclip
-import tkinter.messagebox as mb
 import os
 
 WIDTH=600
@@ -37,7 +37,7 @@ def Record():
 
 def Reproduce():
 
-	if os.path.exists('translate.mp3'): os.remove("translate.mp3")
+	if os.path.exists('sound.mp3'): os.remove("sound.mp3")
 
 	if "тебя создал" in txt.get('1.0', 'end') or "создал тебя" in txt.get('1.0', 'end'):
 		text = pashalca + txt.get('1.0', 'end')
@@ -53,7 +53,7 @@ def Reproduce():
 
 	tts = gTTS(text=text, lang=lan)
 
-	mp3 = "translate.mp3"
+	mp3 = "sound.mp3"
 
 	tts.save(mp3)
 
@@ -65,7 +65,7 @@ def Copy():
 
 	text = txt.get('1.0', 'end')
 
-	coped = pyperclip.copy(text)
+	coped = copy(text)
 
 	return coped
 
@@ -73,7 +73,7 @@ def Copy():
 
 def Paste():
 	
-	past = pyperclip.paste()
+	past = paste()
 
 	# txt.delete('1.0', END)
 	txt.insert('1.0', past)
@@ -94,11 +94,11 @@ def Translation():
 
 	text = txt.get('1.0', 'end')
 
-	lng_Cbx1_txt = get_key(googletrans.LANGUAGES.keys(), googletrans.LANGUAGES, str(lng_Cbx1.get()))
+	lng_Cbx1_txt = get_key(LANGUAGES.keys(), LANGUAGES, str(lng_Cbx1.get()))
 
-	lng_Cbx2_txt = get_key(googletrans.LANGUAGES.keys(), googletrans.LANGUAGES, str(lng_Cbx2.get()))
+	lng_Cbx2_txt = get_key(LANGUAGES.keys(), LANGUAGES, str(lng_Cbx2.get()))
 
-	translator = googletrans.Translator()
+	translator = Translator()
 
 	result = translator.translate(text, src=lng_Cbx1_txt, dest=lng_Cbx2_txt)
 
@@ -152,8 +152,8 @@ frame = Frame(bg="gray").pack(side=TOP)
 #==========><Выбор первого языка><==========#
 
 lng1 = StringVar()
-lng_Cbx1 = ttk.Combobox(width = 24, textvariable = lng1)
-lng_Cbx1['values']=("\n".join(googletrans.LANGUAGES.values()).replace("(","").replace(")",""))
+lng_Cbx1 = Combobox(width = 24, textvariable = lng1)
+lng_Cbx1['values']=("\n".join(LANGUAGES.values()).replace("(","").replace(")",""))
 lng_Cbx1.place(x=40, y=40)
 lng_Cbx1.current()
 
@@ -162,8 +162,8 @@ lng_Cbx1.set("russian")
 #==========><Выбор второго языка><==========#
 
 lng2 = StringVar()
-lng_Cbx2 = ttk.Combobox(window, width = 24, textvariable = lng2)
-lng_Cbx2['values']="\n".join(googletrans.LANGUAGES.values())
+lng_Cbx2 = Combobox(window, width = 24, textvariable = lng2)
+lng_Cbx2['values']="\n".join(LANGUAGES.values())
 lng_Cbx2.place(x=255, y=40)
 lng_Cbx2.current()
 
@@ -248,7 +248,7 @@ pasteBt = Button(
 
 #==========><Конец><==========#
 
-mb.showinfo("Важно!", "Сейчас переводчик поддерживает запись только русской и английской речи!\
+showinfo("Важно!", "Сейчас переводчик поддерживает запись только русской и английской речи!\
 				Поэтому не пытайтесь говорить на других языках.")
 
 window.mainloop()
